@@ -1,0 +1,117 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.bg,
+.fldinfo,
+.formcn {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.bg {
+  background-color: lightgrey;
+}
+
+.formcn {
+  pointer-events: initial;
+}
+
+.cta {
+  position: absolute;
+  width: 116px;
+  height: 35px;
+  top: 560px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  cursor: pointer;
+
+  background-image: url("assets/cta.png");
+}
+
+.inp {
+  position: absolute;
+  width: 70%;
+  height: 29px;
+  box-sizing: border-box;
+  border: none;
+  padding: 0 12px 0 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: italic;
+  font-size: 13px;
+  line-height: 29px;
+  /* box-shadow: #a8a4a0 2px 2px 2px; */
+  color: grey;
+
+  background-color: white;
+  border-radius: 10px;
+
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+input {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+option {
+  color: black;
+}
+
+.inp:focus {
+  outline-width: 0;
+}
+
+.your_name {
+  top: 129px;
+}
+
+.your_email {
+  top: 173px;
+}
+
+.your_age {
+  top: 216px;
+}
+
+.your_gender {
+  top: 259px;
+}
+
+.your_comment {
+  top: 320px;
+  height: 200px;
+}
+
+.your_name.error,
+.your_email.error,
+.checkage.error span,
+.checkterms.error span,
+.your_age.error,
+.your_comment.error {
+  border: 3px solid #df0000;
+}
+
+::placeholder {
+  color: grey;
+}

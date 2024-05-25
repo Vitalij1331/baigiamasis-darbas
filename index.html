@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta name="" />
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body class="inner-page">
+    <div class="wrapper">
+      <div class="bg"></div>
+
+      <div class="formcn">
+        <div class="fldinfo"></div>
+
+        <div class="namecn">
+          <div class="namefld">
+            <input
+              id="name"
+              class="your_name inp"
+              type="text"
+              placeholder="Full Name"
+              data-att="name"
+            />
+          </div>
+        </div>
+
+        <div class="mailcn">
+          <div class="emailfld">
+            <input
+              id="email"
+              class="your_email inp"
+              type="text"
+              placeholder="Email"
+              data-att="email"
+            />
+          </div>
+        </div>
+
+        <div class="agecn">
+          <div class="agefld">
+            <input
+              id="age"
+              class="your_age inp"
+              type="text"
+              onfocus="(this.type='date')"
+              onblur="(this.type='text')"
+              placeholder="Date of Birth"
+              data-att="date"
+            />
+          </div>
+        </div>
+
+        <div class="gendercn">
+          <div class="genderfld">
+            <select id="gender" class="your_gender inp" data-att="gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="na">N/A</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div class="commfld">
+            <textarea
+              id="comment"
+              class="your_comment inp"
+              type="text"
+              placeholder="Comment"
+              data-att="comment"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="cta"></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      // ========================================================================
+
+      function createCORSRequest(method, requrl) {
+        var xhr = new XMLHttpRequest();
+
+        if ("withCredentials" in xhr) {
+          xhr.open(method, requrl, true);
+        } else if (typeof XDomainRequest != "undefined") {
+          xhr = new XDomainRequest();
+          xhr.open(method, requrl);
+        } else {
+          xhr = null;
+        }
+
+        return xhr;
+      }
+
+      function makeCorsRequest(method, link_url, data) {
+        return new Promise((resolve, error) => {
+          var xhr = createCORSRequest(method, link_url);
+
+          if (!xhr) {
+            return;
+          }
+
+          xhr.setRequestHeader(
+            "Content-type",
+            "application/x-www-form-urlencoded"
+          );
+
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+              var text = xhr.responseText;
+              // var data = JSON.parse(text);
+
+              resolve(text, data);
+            }
+          };
+          // xhr.onload = function(){};
+
+          xhr.onerror = function () {
+            error("CORS request error");
+          };
+
+          xhr.send(data);
+        });
+      }
+
+      // ========================================================================
+
+      var your_name = document.querySelector(".your_name");
+      var your_email = document.querySelector(".your_email");
+      var your_age = document.querySelector(".your_age");
+      var your_gender = document.querySelector(".your_gender");
+      var your_comment = document.querySelector(".your_comment");
+
+      var checkage = document.getElementById("checkage");
+
+      var sendBtn = document.querySelector(".cta");
+
+      var emailRegex =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-ZÀ\-ÿ\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      var textRegex = /^.[a-zA-ZÀ\-ÿ 0-9]{1,30}$/g;
+      var phoneRegex = /^(\+)?([ 0-9()-]){9,14}$/g;
+
+      var domInputs = document.getElementsByTagName("input");
+
+      var inputs = Array.prototype.slice.call(domInputs);
+
+      var nameOk = false;
+      var emailOk = false;
+      var ageOk = false;
+      var commentOk = false;
+      var termsOk = false;
+      var radVal = "male";
+      var radios = [];
+
+      function checkIfValid(event) {
+        var el = document.getElementById(event.target.id);
+
+        switch (el.id) {
+          case "name":
+            if (!el.value.match(textRegex)) {
+              el.classList.add("error");
+              nameOk = false;
+              return;
+            } else {
+              el.classList.remove("error");
+              nameOk = true;
+            }
+
+            break;
+
+          case "email":
+            if (!el.value.match(emailRegex)) {
+              el.classList.add("error");
+              emailOk = false;
+              return;
+            } else {
+              el.classList.remove("error");
+              emailOk = true;
+            }
+
+            break;
+
+          case "age":
+            if (el.value !== "") {
+              el.classList.remove("error");
+              ageOk = true;
+            } else {
+              el.classList.add("error");
+            }
+
+            break;
+
+          case "comment":
+            if (!el.value.match(textRegex)) {
+              el.classList.add("error");
+              commentOk = false;
+            } else {
+              el.classList.remove("error");
+              commentOk = true;
+            }
+            break;
+        }
+
+        if (!started) {
+          started = true;
+          startEvent("Main");
+        }
+      }
+
+      inputs.forEach(function (item) {
+        if (item.type === "text") {
+          document
+            .getElementById(item.id)
+            .addEventListener("input", checkIfValid);
+        }
+      });
+
+      your_comment.addEventListener("input", checkIfValid);
+
+      function sendVals(event) {
+        if (nameOk && emailOk && ageOk && termsOk && commentOk) {
+          var leadsURL = "";
+
+          makeCorsRequest("POST", leadsURL).then((resolve) => {
+            // console.log(resolve);
+          });
+
+          setTimeout(function () {
+            finished = true;
+          }, 100);
+
+          outtl.play();
+
+          startEvent("Seen_All");
+        } else {
+          if (!ageOk) {
+            your_age.classList.add("error");
+          }
+          if (!nameOk) {
+            your_name.classList.add("error");
+          }
+          if (!emailOk) {
+            your_email.classList.add("error");
+          }
+          if (!commentOk) {
+            your_comment.classList.add("error");
+            console.log("add");
+          }
+        }
+      }
+
+      // ========================================================================
+
+      function init() {
+        wrapper.addEventListener("click", clickThrough);
+        sendBtn.addEventListener("click", sendVals);
+      }
+
+      // ========================================================================
+
+      init();
+    </script>
+  </body>
+</html>
